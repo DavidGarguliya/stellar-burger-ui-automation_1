@@ -1,0 +1,8 @@
+{
+  "url": "https://stellarburgers.education-services.ru/api/auth/register",
+  "payload": {
+    "email": "ui_autotest_92ab344fde83@example.com",
+    "password": "Password123!",
+    "name": "UI Autotest"
+  }
+}

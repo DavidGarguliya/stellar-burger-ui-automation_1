@@ -1,0 +1,7 @@
+{
+  "name": "Локальный запуск тестов",
+  "type": "local",
+  "buildName": "Диплом. Задание 3",
+  "buildUrl": "https://stellarburgers.education-services.ru",
+  "reportName": "Подробный Allure-отчёт UI автотестов"
+}

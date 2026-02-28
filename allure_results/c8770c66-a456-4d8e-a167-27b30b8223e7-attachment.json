@@ -1,0 +1,9 @@
+{
+  "currentUrl": "https://stellarburgers.education-services.ru/feed",
+  "localStorage": {
+    "accessToken": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YTJjZWY0OTg0MjcwMDAxYmU1OTE5MyIsImlhdCI6MTc3MjI3NzQ5MiwiZXhwIjoxNzcyMjc4NjkyfQ.dvvLdd-MaVjDY13MkWbMa8xjIL4XbBieV0YeJ4ywEsQ",
+    "refreshToken": "6a9c2a1162f2fd0994f134ada7020b54c3e33cbc076b1e6479efe519bf798e5659cf6851a8512b85"
+  },
+  "sessionStorage": {},
+  "cookies": []
+}

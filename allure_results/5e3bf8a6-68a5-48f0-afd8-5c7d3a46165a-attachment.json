@@ -1,0 +1,7 @@
+{
+  "url": "https://stellarburgers.education-services.ru/api/auth/user",
+  "headers": {
+    "Authorization": "Bearer e...nZk0NyYI"
+  },
+  "email": "ui_autotest_9cbf0a701e9d@example.com"
+}
