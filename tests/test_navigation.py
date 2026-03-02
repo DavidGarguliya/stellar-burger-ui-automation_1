@@ -3,7 +3,6 @@
 import allure
 
 from config.settings import BASE_URL
-from helpers.navigation_helper import NavigationHelper
 
 
 @allure.parent_suite("Диплом. Задание 3")
@@ -21,10 +20,14 @@ class TestNavigation:
     def test_click_on_constructor_opens_constructor_page(self, feed_page):
         """Переход из ленты заказов в конструктор открывает страницу конструктора."""
 
-        _, current_url, heading = NavigationHelper.open_constructor_from_feed(feed_page)
+        with allure.step("Перейти из ленты заказов в конструктор"):
+            constructor_page = feed_page.header.open_constructor_page()
+            current_url = constructor_page.get_current_url().rstrip("/")
+            heading = constructor_page.get_heading_text()
 
-        assert current_url == BASE_URL
-        assert heading == "Соберите бургер"
+        with allure.step("Проверить URL и заголовок страницы конструктора"):
+            assert current_url == BASE_URL
+            assert heading == "Соберите бургер"
 
     @allure.story("Переход в ленту заказов")
     @allure.severity(allure.severity_level.CRITICAL)
@@ -33,6 +36,9 @@ class TestNavigation:
     def test_click_on_order_feed_opens_feed_page(self, constructor_page):
         """Переход из конструктора открывает ленту заказов."""
 
-        _, all_time_total = NavigationHelper.open_feed_from_constructor(constructor_page)
+        with allure.step("Перейти из конструктора в ленту заказов"):
+            feed_page = constructor_page.header.open_feed_page()
+            all_time_total = feed_page.get_all_time_total()
 
-        assert all_time_total > 0
+        with allure.step("Проверить, что счётчик выполненных заказов отображается"):
+            assert all_time_total > 0

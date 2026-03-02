@@ -3,8 +3,21 @@
 import allure
 import pytest
 
-from helpers.order_helper import OrderHelper
+from helpers.order_helper import (
+    attach_created_order_number,
+    attach_formatted_order_number,
+    attach_order_counter_value,
+    format_order_number,
+)
 from pages.feed_page import FeedPage
+from test_data.ingredients import CRATER_BUN, LUMINESCENT_FILLING, SPICY_SAUCE
+
+
+ORDER_INGREDIENTS = (
+    CRATER_BUN,
+    SPICY_SAUCE,
+    LUMINESCENT_FILLING,
+)
 
 
 @allure.parent_suite("Диплом. Задание 3")
@@ -22,14 +35,30 @@ class TestOrderFeed:
     def test_new_order_increases_all_time_counter(self, authorized_driver, authorized_constructor_page):
         """После оформления заказа общий счётчик выполненных заказов увеличивается."""
 
-        feed_page, all_time_before = OrderHelper.open_feed_and_get_all_time_total(authorized_driver)
+        with allure.step("Открыть ленту заказов и сохранить исходный общий счётчик"):
+            feed_page = FeedPage(authorized_driver).open()
+            all_time_before = feed_page.get_all_time_total()
+            attach_order_counter_value(
+                "Счётчик «Выполнено за всё время»",
+                all_time_before,
+                "до создания заказа",
+            )
 
-        authorized_constructor_page.open()
-        OrderHelper.place_order_and_get_number(authorized_constructor_page)
+        with allure.step("Создать новый заказ"):
+            authorized_constructor_page.open()
+            order_number = authorized_constructor_page.place_order_and_get_number(ORDER_INGREDIENTS)
+            attach_created_order_number(order_number)
 
-        all_time_after = OrderHelper.refresh_feed_and_get_all_time_total(feed_page, all_time_before)
+        with allure.step("Получить обновлённый общий счётчик после создания заказа"):
+            all_time_after = feed_page.refresh_and_get_all_time_total(all_time_before)
+            attach_order_counter_value(
+                "Счётчик «Выполнено за всё время»",
+                all_time_after,
+                "после создания заказа",
+            )
 
-        assert all_time_after > all_time_before
+        with allure.step("Проверить, что общий счётчик увеличился"):
+            assert all_time_after > all_time_before
 
     @allure.story("Рост дневного счётчика выполненных заказов")
     @allure.severity(allure.severity_level.CRITICAL)
@@ -38,14 +67,30 @@ class TestOrderFeed:
     def test_new_order_increases_today_counter(self, authorized_driver, authorized_constructor_page):
         """После оформления заказа дневной счётчик выполненных заказов увеличивается."""
 
-        feed_page, today_before = OrderHelper.open_feed_and_get_today_total(authorized_driver)
+        with allure.step("Открыть ленту заказов и сохранить исходный дневной счётчик"):
+            feed_page = FeedPage(authorized_driver).open()
+            today_before = feed_page.get_today_total()
+            attach_order_counter_value(
+                "Счётчик «Выполнено за сегодня»",
+                today_before,
+                "до создания заказа",
+            )
 
-        authorized_constructor_page.open()
-        OrderHelper.place_order_and_get_number(authorized_constructor_page)
+        with allure.step("Создать новый заказ"):
+            authorized_constructor_page.open()
+            order_number = authorized_constructor_page.place_order_and_get_number(ORDER_INGREDIENTS)
+            attach_created_order_number(order_number)
 
-        today_after = OrderHelper.refresh_feed_and_get_today_total(feed_page, today_before)
+        with allure.step("Получить обновлённый дневной счётчик после создания заказа"):
+            today_after = feed_page.refresh_and_get_today_total(today_before)
+            attach_order_counter_value(
+                "Счётчик «Выполнено за сегодня»",
+                today_after,
+                "после создания заказа",
+            )
 
-        assert today_after > today_before
+        with allure.step("Проверить, что дневной счётчик увеличился"):
+            assert today_after > today_before
 
     @allure.story("Появление нового заказа в списке статусов")
     @allure.severity(allure.severity_level.CRITICAL)
@@ -57,14 +102,22 @@ class TestOrderFeed:
     def test_new_order_number_appears_in_progress_section(self, authorized_driver, authorized_constructor_page):
         """После оформления заказа его номер отображается в ленте заказов."""
 
-        formatted_order_number = OrderHelper.place_order_and_get_formatted_number(authorized_constructor_page)
-        feed_page = FeedPage(authorized_driver).open()
-        order_status = OrderHelper.get_order_feed_status(feed_page, formatted_order_number)
+        with allure.step("Создать новый заказ и подготовить его номер для проверки в ленте"):
+            order_number = authorized_constructor_page.place_order_and_get_number(ORDER_INGREDIENTS)
+            attach_created_order_number(order_number)
+            formatted_order_number = format_order_number(order_number)
+            attach_formatted_order_number(formatted_order_number)
 
-        if order_status == "ready":
-            pytest.xfail(
-                "Текущий стенд почти мгновенно переводит новый заказ в статус done, "
-                "поэтому номер успевает попасть в раздел «Готовы»."
-            )
+        with allure.step("Открыть ленту заказов и определить статус нового заказа"):
+            feed_page = FeedPage(authorized_driver).open()
+            order_status = feed_page.get_order_status(formatted_order_number)
 
-        assert order_status in {"in_progress", "feed"}
+        with allure.step("Проверить, что новый заказ не ушёл сразу в готовые"):
+            if order_status == "ready":
+                pytest.xfail(
+                    "Текущий стенд почти мгновенно переводит новый заказ в статус done, "
+                    "поэтому номер успевает попасть в раздел «Готовы»."
+                )
+
+        with allure.step("Проверить, что номер заказа отображается в ленте или в блоке «В работе»"):
+            assert order_status in {"in_progress", "feed"}

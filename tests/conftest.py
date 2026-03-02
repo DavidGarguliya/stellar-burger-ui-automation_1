@@ -6,14 +6,13 @@ import pytest
 from api.api_client import ApiClient
 from browser.browser_factory import create_driver
 from config.settings import BASE_URL
+from pages.base_page import BasePage
 from pages.constructor_page import ConstructorPage
 from pages.feed_page import FeedPage
 from reporting.allure_reporter import (
     attach_failure_artifacts,
-    attach_json,
     attach_post_test_artifacts,
     get_allure_results_dir,
-    mask_secret,
     write_allure_metadata_files,
 )
 from reporting.suite_metadata import get_browser_suite_name, get_russian_suite_name
@@ -42,7 +41,7 @@ def driver(browser_name):
         driver_instance = create_driver(browser_name)
     yield driver_instance
     with allure.step(f"Завершить браузер {browser_name}"):
-        driver_instance.quit()
+        BasePage(driver_instance).quit_browser()
 
 
 @pytest.fixture
@@ -66,30 +65,9 @@ def test_user(api_client):
 def authorized_driver(driver, test_user):
     """Авторизует пользователя в браузере через localStorage."""
 
-    with allure.step("Открыть главную страницу для подготовки авторизации"):
-        driver.get(BASE_URL)
-
-    with allure.step("Подложить токены в localStorage"):
-        driver.execute_script(
-            """
-            window.localStorage.setItem('accessToken', arguments[0]);
-            window.localStorage.setItem('refreshToken', arguments[1]);
-            """,
-            test_user.access_token,
-            test_user.refresh_token,
-        )
-        attach_json(
-            "Токены, записанные в localStorage",
-            {
-                "email": test_user.email,
-                "accessToken": mask_secret(test_user.access_token),
-                "refreshToken": mask_secret(test_user.refresh_token),
-            },
-        )
-
-    with allure.step("Обновить страницу после авторизации"):
-        driver.refresh()
-    return driver
+    constructor_page = ConstructorPage(driver)
+    constructor_page.authorize_user(test_user)
+    return constructor_page.driver
 
 
 @pytest.fixture

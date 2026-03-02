@@ -22,6 +22,24 @@ class BasePage:
 
         self.driver.get(url)
 
+    @allure.step("Обновить текущую страницу")
+    def refresh_page(self):
+        """Обновляет текущую страницу."""
+
+        self.driver.refresh()
+
+    @allure.step("Завершить браузер")
+    def quit_browser(self):
+        """Завершает сессию браузера."""
+
+        self.driver.quit()
+
+    @allure.step("Получить текущий URL страницы")
+    def get_current_url(self) -> str:
+        """Возвращает текущий URL."""
+
+        return self.driver.current_url
+
     @allure.step("Дождаться видимости элемента")
     def wait_for_visibility(self, locator):
         """Ожидает видимость элемента и возвращает его."""
@@ -46,6 +64,12 @@ class BasePage:
 
         element = self.scroll_to_element(locator)
         self.driver.execute_script("arguments[0].click();", element)
+
+    @allure.step("Выполнить JavaScript в браузере")
+    def execute_script(self, script: str, *args):
+        """Выполняет JavaScript и возвращает результат."""
+
+        return self.driver.execute_script(script, *args)
 
     @allure.step("Получить текст элемента")
     def get_text(self, locator) -> str:

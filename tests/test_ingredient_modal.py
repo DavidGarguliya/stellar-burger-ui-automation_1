@@ -2,7 +2,6 @@
 
 import allure
 
-from helpers.ingredient_modal_helper import IngredientModalHelper
 from test_data.ingredients import SPICY_SAUCE
 
 
@@ -21,13 +20,14 @@ class TestIngredientDetailsModal:
     def test_click_on_ingredient_opens_details_modal(self, constructor_page):
         """После клика по ингредиенту открывается модальное окно с его деталями."""
 
-        _, title, ingredient_name = IngredientModalHelper.open_ingredient_modal_and_get_content(
-            constructor_page,
-            SPICY_SAUCE,
-        )
+        with allure.step("Открыть модальное окно ингредиента и получить его данные"):
+            _, title, ingredient_name = constructor_page.open_ingredient_modal_and_get_content(
+                SPICY_SAUCE,
+            )
 
-        assert title == "Детали ингредиента"
-        assert ingredient_name == SPICY_SAUCE.name
+        with allure.step("Проверить заголовок и название ингредиента в модальном окне"):
+            assert title == "Детали ингредиента"
+            assert ingredient_name == SPICY_SAUCE.name
 
     @allure.story("Закрытие деталей ингредиента")
     @allure.severity(allure.severity_level.NORMAL)
@@ -36,6 +36,8 @@ class TestIngredientDetailsModal:
     def test_click_on_close_button_closes_details_modal(self, constructor_page):
         """Клик по крестику закрывает модальное окно ингредиента."""
 
-        modal = IngredientModalHelper.open_and_close_ingredient_modal(constructor_page, SPICY_SAUCE)
+        with allure.step("Открыть и закрыть модальное окно ингредиента"):
+            modal = constructor_page.open_and_close_ingredient_modal(SPICY_SAUCE)
 
-        assert modal.is_closed()
+        with allure.step("Проверить, что модальное окно закрыто"):
+            assert modal.is_closed()

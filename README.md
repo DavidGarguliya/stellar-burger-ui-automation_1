@@ -30,7 +30,7 @@ Diplom_3/
 ├── api/             # API-клиент для подготовки тестовых пользователей
 ├── browser/         # Фабрика браузеров и настройки WebDriver
 ├── config/          # Базовые настройки проекта
-├── helpers/         # Вспомогательные high-level helper-классы
+├── helpers/         # Вспомогательные функции без page interactions
 ├── locators/        # Локаторы страниц и модальных окон
 ├── pages/           # Page Object классы
 ├── reporting/       # Логика формирования Allure-артефактов
@@ -70,11 +70,8 @@ Page Object классы для страниц и модальных окон.
 
 ### `helpers`
 
-Вспомогательные классы с high-level действиями для тестов.
+Вспомогательные функции для форматирования и вложений в отчёт.
 
-- [helpers/navigation_helper.py](helpers/navigation_helper.py)
-- [helpers/ingredient_modal_helper.py](helpers/ingredient_modal_helper.py)
-- [helpers/constructor_helper.py](helpers/constructor_helper.py)
 - [helpers/order_helper.py](helpers/order_helper.py)
 
 ### `api`
@@ -205,6 +202,7 @@ allure open allure-report
 
 - используется паттерн `Page Object`;
 - для каждой страницы и модального окна создан отдельный класс;
+- методы взаимодействия со страницами размещены внутри Page Object классов в пакете `pages`;
 - локаторы вынесены в отдельный пакет;
 - тесты разделены по функциональности;
 - тесты независимы друг от друга;

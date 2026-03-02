@@ -2,7 +2,6 @@
 
 import allure
 
-from helpers.constructor_helper import ConstructorHelper
 from test_data.ingredients import SPICY_SAUCE
 
 
@@ -21,9 +20,10 @@ class TestConstructorCounter:
     def test_ingredient_counter_increases_after_adding_to_constructor(self, constructor_page):
         """После добавления ингредиента в конструктор его счётчик увеличивается."""
 
-        initial_counter, updated_counter = ConstructorHelper.get_ingredient_counter_before_and_after_adding(
-            constructor_page,
-            SPICY_SAUCE,
-        )
+        with allure.step("Получить значения счётчика ингредиента до и после добавления"):
+            initial_counter, updated_counter = constructor_page.get_ingredient_counter_before_and_after_adding(
+                SPICY_SAUCE,
+            )
 
-        assert updated_counter > initial_counter
+        with allure.step("Проверить, что счётчик ингредиента увеличился"):
+            assert updated_counter > initial_counter
