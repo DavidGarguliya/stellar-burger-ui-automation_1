@@ -1,0 +1,7 @@
+{
+  "status_code": 202,
+  "body": {
+    "success": true,
+    "message": "User successfully removed"
+  }
+}

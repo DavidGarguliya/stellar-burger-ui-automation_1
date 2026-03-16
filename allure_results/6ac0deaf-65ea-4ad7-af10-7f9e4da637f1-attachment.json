@@ -1,0 +1,11 @@
+{
+  "browserName": "firefox",
+  "browserVersion": "147.0.1",
+  "platformName": "mac",
+  "currentUrl": "https://stellarburgers.education-services.ru/feed",
+  "windowSize": {
+    "width": 1440,
+    "height": 1080
+  },
+  "sessionId": "69531929-b6cd-4b6a-87b9-0634badf0e86"
+}

@@ -1,0 +1,16 @@
+[
+  {
+    "name": "Известное ограничение стенда",
+    "matchedStatuses": [
+      "skipped"
+    ],
+    "messageRegex": ".*текущий стенд почти мгновенно переводит новый заказ.*"
+  },
+  {
+    "name": "Падение UI-проверки",
+    "matchedStatuses": [
+      "failed"
+    ],
+    "traceRegex": ".*selenium.*|.*AssertionError.*"
+  }
+]

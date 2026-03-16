@@ -1,0 +1,12 @@
+{
+  "status_code": 200,
+  "body": {
+    "success": true,
+    "user": {
+      "email": "ui_autotest_efe6964b963f@example.com",
+      "name": "UI Autotest"
+    },
+    "accessToken": "Bearer e...Qf5Ok1VE",
+    "refreshToken": "722d48cf...d418a577"
+  }
+}
