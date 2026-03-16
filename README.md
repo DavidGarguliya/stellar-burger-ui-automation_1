@@ -1,4 +1,4 @@
-# Diplom_3
+# Stellar Burger UI Automation
 
 UI-автотесты для веб-приложения Stellar Burgers: <https://stellarburgers.education-services.ru/>
 
